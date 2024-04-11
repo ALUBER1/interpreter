@@ -8,7 +8,7 @@ path=''
 def apri(event=None):
     global nuovo
     global path
-    path=filedialog.askopenfilename(filetype[('file di testo','.wmll')])
+    path=filedialog.askopenfilename(filetype=[('file di testo','.wmll')])
     with open(path,'r') as file:
         nuovo=True
         testo.delete('1.0',tkinter.END)
