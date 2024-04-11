@@ -20,7 +20,7 @@ def shift(m):
         
         
 def close_file(g):
-    testo.delete('1.0',tkinter.END)
+    if g.cget("text")==path:testo.delete('1.0',tkinter.END)
     g.destroy()
     m=buttons.index(g)
     buttons.remove(g)
