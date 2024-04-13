@@ -6,21 +6,22 @@ from gestisci import ottieni_dati
 n=0
 nuovo=False
 path=''
+def nuovo_(event=None):
+    testo.delete('1.0',tkinter.END)
+    global path
+    path=''
+    global nuovo
+    nuovo=False
 def shift(m):
     for i in range(m,len(buttons)):
-        if(i!=m):i+=1
-        print(m,len(buttons),i)
         if i==0:
             buttons[i].pack(anchor='w', before=testo)
-            buttons[i+1].place(x=buttons[i].winfo_width())
         else:
             app.update_idletasks()
             buttons[i].place(x=buttons[i-1].winfo_width()+buttons[i-1].winfo_x())
-            buttons[i+1].place(x=buttons[i].winfo_width()+buttons[i].winfo_x())
-        
-        
 def close_file(g):
-    if g.cget("text")==path:testo.delete('1.0',tkinter.END)
+    if g.cget("text") == path:
+        testo.delete('1.0', tkinter.END)
     g.destroy()
     m=buttons.index(g)
     buttons.remove(g)
@@ -37,17 +38,16 @@ def apri_file(path):
     with open(path,'r') as file:
         testo.delete('1.0',tkinter.END)
         testo.insert(tkinter.END,file.read())
+    global nuovo
+    nuovo=True
 def apri(event=None):
     xa=0
-    global nuovo
-    global path
+    global nuovo,path,n,buttons
     path=filedialog.askopenfilename()
     with open(path,'r') as file:
         testo.delete('1.0',tkinter.END)
         testo.insert(tkinter.END,file.read())
-    global buttons
     button=tkinter.Button(app,text=path,fg='blue',command=lambda p=path: apri_file(p))
-    global n
     for i in range(0,len(buttons)):
         xa+=buttons[i].winfo_width()
     if not nuovo:
@@ -65,8 +65,7 @@ def apri(event=None):
     n+=1
     nuovo=True
 def salva(event=None):
-    global nuovo
-    global path
+    global nuovo,path
     if(not nuovo):
         path=filedialog.asksaveasfile(defaultextension='.wmll',filetypes=[('file di testo','.wmll')])
     with open(path,'w') as file:
@@ -76,10 +75,6 @@ def salva_nome():
     path=filedialog.asksaveasfile(defaultextension='.wmll',filetypes=[('file di testo','.wmll')])
     with open(path,'w') as file:
         file.write(testo.get('1.0',tkinter.END))
-def chiudi():
-    global nuovo
-    nuovo=False
-    testo.delete('1.0',tkinter.END)
 subprocess.run('sposta.bat & exit')
 app=tkinter.Tk()
 app.title("windmill interpreter")
@@ -87,11 +82,12 @@ app.iconbitmap('windmill.ico')
 men=tkinter.Menu(app)
 opzioni= tkinter.Menu(men, tearoff=0)
 opzioni.add_command(label="apri",command=apri)
+opzioni.add_command(label="nuovo ctr+n",command=nuovo_)
 opzioni.add_command(label="salva ctr+s",command=salva)
 opzioni.add_command(label="salva con nome ctr+n",command=salva_nome)
 opzioni.add_command(label='esci',command=app.quit)
 men.add_cascade(label="opzioni",menu=opzioni)
-app.bind('<Control-n>',salva_nome)
+app.bind('<Control-n>',nuovo_)
 app.bind('<Control-s>',salva)
 buttons=[]
 testo=scrolledtext.ScrolledText(app,wrap=tkinter.WORD)
