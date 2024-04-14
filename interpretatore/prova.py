@@ -34,11 +34,12 @@ def close_file(g):
         nuovo=False
     else:
         shift(m)
-def apri_file(path):
-    with open(path,'r') as file:
+def apri_file(path1):
+    with open(path1,'r') as file:
         testo.delete('1.0',tkinter.END)
         testo.insert(tkinter.END,file.read())
-    global nuovo
+    global nuovo,path
+    path=path1
     nuovo=True
 def apri(event=None):
     xa=0
