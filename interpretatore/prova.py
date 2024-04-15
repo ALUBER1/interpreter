@@ -1,3 +1,4 @@
+
 import tkinter
 import subprocess
 from tkinter import scrolledtext
@@ -22,6 +23,8 @@ def shift(m):
 def close_file(g):
     if g.cget("text") == path:
         testo.delete('1.0', tkinter.END)
+        with open("messaggi\path.txt",'w')as file_path:
+            file_path.write('')
     g.destroy()
     m=buttons.index(g)
     buttons.remove(g)
@@ -38,13 +41,18 @@ def apri_file(path1):
     with open(path1,'r') as file:
         testo.delete('1.0',tkinter.END)
         testo.insert(tkinter.END,file.read())
+    with open("messaggi\path.txt",'w')as file_path:
+        file_path.write(path1)
     global nuovo,path
     path=path1
     nuovo=True
-def apri(event=None):
+def apri(event=None,path1=''):
     xa=0
     global nuovo,path,n,buttons
-    path=filedialog.askopenfilename()
+    if path1=='':path=filedialog.askopenfilename()
+    else : path=path1
+    with open("messaggi\path.txt",'w')as file_path:
+        file_path.write(path)
     with open(path,'r') as file:
         testo.delete('1.0',tkinter.END)
         testo.insert(tkinter.END,file.read())
@@ -69,14 +77,22 @@ def salva(event=None):
     global nuovo,path
     if(not nuovo):
         path=filedialog.asksaveasfile(defaultextension='.wmll',filetypes=[('file di testo','.wmll')])
-    with open(path,'w') as file:
-        file.write(testo.get('1.0',tkinter.END))
+    else:   
+        with open(path,'w') as file:
+            file.write(testo.get('1.0',tkinter.END))
+    with open("messaggi\path.txt",'w')as file_path:
+        file_path.write(path.name)
+        apri(path1=path.name)
 def salva_nome():
     global path
     path=filedialog.asksaveasfile(defaultextension='.wmll',filetypes=[('file di testo','.wmll')])
     with open(path,'w') as file:
         file.write(testo.get('1.0',tkinter.END))
+    with open("messaggi\path.txt",'w')as file_path:
+        file_path.write(path)
 subprocess.run('sposta.bat & exit')
+with open("messaggi\path.txt",'w')as file_path:
+    file_path.write('')
 app=tkinter.Tk()
 app.title("windmill interpreter")
 app.iconbitmap('windmill.ico')
